@@ -29,11 +29,19 @@ app.post '/webhook', (req, res, next) ->
   console.log 'webhook requested', req.body.repository.full_name
   res.end()
 
-app.post '/post', (req, res, next) ->
-  saver.saveRequest req, db, (err, filename) ->
+app.post '/postDmp', (req, res, next) ->
+  saver.saveDump req, db, (err, filename) ->
     return next err if err?
 
-    console.log 'saved', filename
+    console.log 'saved dump file:', filename
+    res.send path.basename(filename)
+    res.end()
+
+app.post '/postSym', (req, res, next) ->
+  saver.saveSymbol req, db, (err, filename) ->
+    return next err if err?
+
+    console.log 'saved symbol file:', filename
     res.send path.basename(filename)
     res.end()
 
